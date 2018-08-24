@@ -64,6 +64,12 @@ def svm_loss_vectorized(W, X, y, reg):
 
   Inputs and outputs are the same as svm_loss_naive.
   """
+  
+  #############################################################################
+  # TODO:                                                                     #
+  # Implement a vectorized version of the structured SVM loss, storing the    #
+  # result in loss.                                                           #
+  #############################################################################
   num_train = X.shape[0]
   loss = 0.0
   dW = np.zeros(W.shape) # initialize the gradient as zero
@@ -77,15 +83,9 @@ def svm_loss_vectorized(W, X, y, reg):
   loss /=num_train
   loss += reg * np.sum(W * W)
   #############################################################################
-  # TODO:                                                                     #
-  # Implement a vectorized version of the structured SVM loss, storing the    #
-  # result in loss.                                                           #
-  #############################################################################
-  pass
-  #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
-
+  
 
   #############################################################################
   # TODO:                                                                     #
@@ -96,7 +96,13 @@ def svm_loss_vectorized(W, X, y, reg):
   # to reuse some of the intermediate values that you used to compute the     #
   # loss.                                                                     #
   #############################################################################
-  pass
+  num_true_arr = np.zeros_like(margins)
+  num_true_arr[margins>0]=1
+  num_true = np.sum(num_true_arr,axis=1)
+  num_true_arr[np.arange(num_train),y[np.arange(num_train)]]=-num_true.T
+  dW = np.dot(X.T, num_true_arr)
+  dW /= num_train
+  dW += 2 * reg * W
   #############################################################################
   #                             END OF YOUR CODE                              #
   #############################################################################
